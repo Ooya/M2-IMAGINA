@@ -10,6 +10,10 @@
 #include <string.h>
 #define PI 3.1415926535
 
+/* En-tetes */
+
+float adsr(float x);
+
 /* QUESTION 1 : */
 
 float freq = 440.0f ;		// toutes questions
@@ -19,16 +23,16 @@ float distorsion = 1 ;
 FMOD_RESULT F_CALLBACK cb_question1 (FMOD_SOUND *sound, void *data, unsigned int datalen)
 {
     unsigned int  count;
-    static float  t = 0 ;
+    static float  t = 0;
     signed short *stereo16bitbuffer = (signed short *)data;
 
     for (count=0; count<datalen>>2; count++)
     {
 	// un échantillon à gauche puis à droite (format "signed short" = entier entre -32768 et 32767)
 
-        *stereo16bitbuffer++ = (signed short) 0;
-        *stereo16bitbuffer++ = (signed short) 0;
-	    t += 0 ;
+        *stereo16bitbuffer++ = (signed short) (ampGauche * sin(2 * PI * freq * t * distorsion)*32767*adsr(t));
+        *stereo16bitbuffer++ = (signed short) (ampDroite * sin(2 * PI * freq * t * distorsion)*32767*adsr(t));
+	    t += (1.0f/44100.0f);
     }
 
     return FMOD_OK;
@@ -36,11 +40,21 @@ FMOD_RESULT F_CALLBACK cb_question1 (FMOD_SOUND *sound, void *data, unsigned int
 
 /* EXERCICE 3 */
 
-float Attack=0.1, Decay=0.1, Duree=2, Sustain=0.8, Release=1.5 ;
+float Attack=0.01, Decay=0.1, Duree=2, Sustain=0.8, Release=1.5 ;
 
 float adsr (float x)
 {
-    return 0 ;
+    if (x<Attack){
+        return (x/Attack);
+    } else if (x<Attack+Decay){
+        return ((1-Sustain)*(Attack+Decay-x)/Decay + Sustain);
+    } else if (x<Attack+Decay+Duree){
+        return Sustain;
+    } else if (x< Attack+Decay+Duree+Release){
+        return (Sustain*(Attack+Decay+Duree+Release-x)/Release);
+    } else {
+        return 0;
+    }
 }
 
 /* Question 4 */
@@ -214,35 +228,47 @@ int main(int argc, char *argv[])
             
             case '*' :
             {
+                ampGauche /= 2.0f;
+                ampDroite /= 2.0f;
                 break;
             }
             case '/' :
             {
+                ampGauche *= 2.0f;
+                ampDroite *= 2.0f;
                 break;
             }
             
              case '+' :
             {
+                freq += 10.0f;
                 break;
             }
             case '-' :
             {
+                freq -= 10.0f;
                 break;
             }
             case '>' :
             {
+                ampGauche /= 2.0f;
+                ampDroite *= 2.0f;                
                 break;
             }
             case '<' :
             {
+                ampGauche *= 2.0f;
+                ampDroite /= 2.0f;
                 break;
             }
             case 'g' :
             {
+                distorsion+=100;
                 break;
             }
             case 'd' :
             {
+                distorsion-=100;
                 break;
             }
             
