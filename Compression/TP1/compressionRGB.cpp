@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "image_ppm.h"
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -91,6 +92,22 @@ int main(int argc, char* argv[]){
 		}
 	}
 
+	//calcul du PSNR
+	float somme = 0.0f;
+	for(int i = 0; i< nW; i++){
+		for(int j = 0; j<nH*3;j+=3){
+			somme += pow(ImgIn[(i*nW*3)+j] - ImgOutFin[(i*nW*3)+j],2);
+			somme += pow(ImgIn[(i*nW*3)+j+1] - ImgOutFin[(i*nW*3)+j+1],2);
+			somme += pow(ImgIn[(i*nW*3)+j+2] - ImgOutFin[(i*nW*3)+j+2],2);
+		}
+	}
+	float EQM = (1.0f/nW*nH)*somme;
+	float PSNR = 10*log10(pow(255,2)/EQM);
+	cout << "EQM: " << EQM << " | PSNR: " << PSNR << endl;
+	//image RGB : 	> EQM: 1.20079e+08 | PSNR: -32.6639
+	//image YCrCb : > EQM: 1.35187e+08 | PSNR: -33.1785
+
+	//écriture des images
 	ecrire_image_ppm(cNomImgEcriteR, ImgOutR,  nH, nW);
 	ecrire_image_ppm(cNomImgEcriteG, ImgOutG,  nH/2, nW/2);
 	ecrire_image_ppm(cNomImgEcriteB, ImgOutB,  nH/2, nW/2);
