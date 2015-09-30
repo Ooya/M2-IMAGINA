@@ -39,7 +39,7 @@
 
 - **Etat** Même échiquier que le jeu classique
 	- **initial** Une reine pondeuse (H1) et deux chevals (G1 et H2), dans deux coins opposés.
-	![etatInit](/fig/fig1.png)
+	![etatInit](./fig/fig1.png)
 	- **final** echec et mat d'une des deux reines.
 - **Actions** Déplacement de la reine qui fait *spawn* un cheval sur son ancien emplacement. 
 	- Manger une pièce en se déplacant dessus
