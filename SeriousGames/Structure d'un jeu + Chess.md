@@ -32,4 +32,20 @@
 	- La tour se déplace en ligne droite (horizontal ou vertical)
 	- Grand roque, petit roque
 - **Agents** Deux joueurs
-- **But** Battre l'adversaire avec un échec & mat
+- **Buts** Battre l'adversaire avec un échec & mat, éviter de perdre
+- **Facteur d'échec** L'adversaire
+
+## Le cheval chess
+
+- **Etat** Même échiquier que le jeu classique
+	- **initial** Une reine pondeuse (H1) et deux chevals (G1 et H2), dans deux coins opposés.
+	- **final** echec et mat d'une des deux reines.
+- **Actions** Déplacement de la reine qui fait *spawn* un cheval sur son ancien emplacement. 
+	- Manger une pièce en se déplacant dessus
+- **Règles** Les blancs commencent
+	- La reine se déplace comme un Roi classique
+	- A chaque tour de jeu, le joueur choisi de déplacer sa reine ou de déplacer un de ses chevals
+	- Le nombre de chevals est illimité
+- **Agents** deux joueurs
+- **Buts** Mettre en échec le roi adverse, éviter de perdre
+- **Facteur d'échec** L'adversaire
