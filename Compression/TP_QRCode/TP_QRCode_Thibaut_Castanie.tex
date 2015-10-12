@@ -1,0 +1,61 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+%\usepackage{fullpage}
+
+\begin{document}
+
+\title{\textbf{Compte rendu du TP \no 1}\\Méhode de binarisation}
+\author{Thibaut Castanié\\\textit{M2 IMAGINA}}
+\date{3 octobre 2015}
+
+\maketitle
+\thispagestyle{empty}
+
+\newpage 
+
+\section{QR Code de base}
+
+\vspace{1cm}
+
+\begin{center}
+\includegraphics[scale=0.5]{./v2.png}\\
+\textit{L'image originale utilisée pour le TP}
+\end{center}
+
+\section{Binarisation simple}
+
+Afin de binariser l'image, on utilise le seuil suivant : $Th=(p_{max}-p_{min})/2$
+On obtient le résultat suivant :
+
+\begin{center}
+\includegraphics[scale=0.5]{./v2_4x4.png} \hspace{3cm}
+\includegraphics[scale=0.5]{./v2_4x4binarise.png}\\
+\textit{QR code original} \hspace{2cm} \textit{QR code binarisé}
+\end{center}
+
+\section{Binarisation par vote majoritaire}
+
+Pour obtenir un QR code plus "propre" et plus facile à analyser, nous appliquons la même fonction que précédemment, mais cette fois à chaque bloc de 4x4 pixels, en appliquant un vote majoritaire à chacun.
+
+\begin{center}
+\includegraphics[scale=0.5]{./v2_4x4.png} \hspace{3cm}
+\includegraphics[scale=0.5]{./v2binarise.png}\\
+\textit{QR code original} \hspace{1.3cm} \textit{QR code binarisé par vote}
+\end{center}
+
+\section{Binarisation locale}
+
+On utilise l'algorithme de Niblack où $Th = \mu *(1 - k *(1-\sigma/R))$
+
+\begin{center}
+\includegraphics[scale=0.5]{./v2_4x4.png} \hspace{3cm}
+\includegraphics[scale=0.5]{./v2binarise.png}\\
+ \hspace{0.5cm} \textit{QR code original} \hspace{1cm} \textit{QR code binarisé localement}
+\end{center}
+
+\end{document}
