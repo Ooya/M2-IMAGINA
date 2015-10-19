@@ -143,19 +143,23 @@ int main(int argc, char* argv[])
     //     cout << std::endl;
     // }
 
+    stringstream ss;
+    int cpt = 0;
     for (int i = 0; i < nW; i++){
         for (int j = 0; j < nH; j++){
             for (HuffCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it){
                 if(it->first == ImgIn[i*nW+j]){
-                    stringstream ss;
-                    for(int i =0; i< it->second.size();i++){
-                        ss << it->second[i];
+                    for(int k =0; k< it->second.size();k++){
+                        ss << it->second[k];
                     }
-                    //cout << ss.str();
-                    cout << strtol(ss.str().c_str(),0,2);
                 }
             }
         }
+    }
+    string all = ss.str();
+    for (int i = 0; i < all.size(); i+=8){
+        char c = strtol(all.substr(i,8).c_str(),0,2);
+        cout << c;
     }
 
     //écriture de l'image
