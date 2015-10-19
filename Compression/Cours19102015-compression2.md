@@ -51,7 +51,7 @@ pas de plage $\rightarrow$ codage de Huffman;
 
 *Ex :* 4 bits
 
-![tab1.png](./tab1.png) 
+![tab1.png](./figs/tab1.png) 
 
 ### Codage à base de dictionnaire
 
@@ -89,7 +89,7 @@ mot n'apartenant pas au dico (véhicule + 10 ans) $\color{orange} {1}00010010000
 
 Dictionnaire quasi vide au départ, qu'on va remplir au fur et à mesure de la lecture.
 
-![tab2.png](./tab2.png) 
+![tab2.png](./figs/tab2.png) 
 
 **Algo :**
 
@@ -137,4 +137,4 @@ On ne transmet que la différence
 
 ### Quantification
 
-![fig3.jpg](./fig3.jpg)
+![fig3.jpg](./figs/fig3.jpg)
