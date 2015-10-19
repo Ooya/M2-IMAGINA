@@ -122,3 +122,6 @@ Makefile*
 *.mtc1
 *.out
 *.synctex.gz
+
+# Dropbox
+*.attr
