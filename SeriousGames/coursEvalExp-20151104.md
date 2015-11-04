@@ -215,14 +215,26 @@ $$t_{D}=\frac{M_{D}-\mu_{D}}{s_{M_{D}}}$$
 
 ### Exemple
 
- A | B
---|--
-  |  
-  |  
-  |  
-  |  
-  |  
-  |  
-  |  
-  |  
-  |  
+| A  | B  | D  | $(D-M_{D})^{2}$ |
+|:--:|:--:|:--:|:---------------:|
+| 6  | 9  | -3 |        0        |
+| 8  | 9  | -1 |        4        |
+| 7  | 10 | -3 |        0        |
+| 7  | 11 | -4 |        1        |
+| 8  | 11 | -3 |        0        |
+| 6  | 9  | -3 |        0        |
+| 5  | 11 | -6 |        9        |
+| 10 | 11 | -1 |        4        |
+| 8  | 11 | -3 |        0        |
+
+Moyenne $M_{D}$ = -3
+
+$s^{2} = 2,25$
+
+$s_{M_{D}} = 0,5$
+
+$t=\frac{M_{D}}{s_{M_{D}}} = \frac{-3}{0,5} = -6$
+
+Région critique pour un ddl = 8 et $\alpha$ = 0,001 = 3,355 |t| = 6 > 3,355. Donc on rejette H0 !
+
+La différence est significative il y a donc un effet qui n'est pas simplement du au hasard (avec un risque d'erreur de 0,01).
