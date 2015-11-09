@@ -22,6 +22,11 @@ void Maillage::lireMaillage(QString chemin){
         }
         if(nbLigne == 2){
             qDebug() << line;
+            QStringList list = line.split(" ");
+            nbS = list[0].toInt();
+            nbF = list[1].toInt();
+            nbA = list[2].toInt();
+            qDebug() << nbS << nbF << nbA;
            // qDebug() << nbS << nbF << nbA;
         }
     }

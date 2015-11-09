@@ -3,6 +3,7 @@
 #include <QVector>
 #include <QTextStream>
 #include <QDebug>
+#include <QStringList>
 #include "face.h"
 #include "point.h"
 
