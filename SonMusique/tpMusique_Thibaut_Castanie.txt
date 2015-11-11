@@ -1,0 +1,7 @@
+﻿Musique "Weird Summer" de 2min44, par Thibaut Castanié
+
+- BPM : 120
+- Tonalité : La 4
+- Licenses :
+	- Vagues enregistrées par konakaboom : https://www.freesound.org/people/konakaboom/sounds/203156/
+	- Quelques samples de la LMMS Sharing Platform : https://lmms.io/lsp/
