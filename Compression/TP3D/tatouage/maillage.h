@@ -4,6 +4,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QStringList>
+#include <sstream>
 #include "face.h"
 #include "point.h"
 
@@ -16,6 +17,10 @@ public:
     Maillage();
     void lireMaillage(QString chemin);
     void ecrireMaillage(QString chemin);
+
+    int nbS,nbF,nbA;
+    double* tabSommets;
+    int* tabFaces;
 
     QVector<Point> vPoints;
     QVector<Face> vFaces;
