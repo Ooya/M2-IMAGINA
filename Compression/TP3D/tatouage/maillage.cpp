@@ -13,21 +13,21 @@ void Maillage::lireMaillage(QString chemin){
         return;
 
 
-    QDebug dbg(QtDebugMsg);
+    //QDebug dbg(QtDebugMsg);
 
     QTextStream in(&file);
     while (!in.atEnd()) {
         nbLigne++;
         QString line = in.readLine();
         if(nbLigne == 1 && line=="OFF"){
-            qDebug() << "Fichier OFF detecte";
+            qDebug() << "\tFichier OFF detecte...";
         }
         if(nbLigne == 2){
             QStringList list = line.split(" ");
             nbS = list[0].toInt();
             nbF = list[1].toInt();
             nbA = list[2].toInt();
-            qDebug() << "L objet possede " << nbS  << " sommets, " << nbF << " faces et " << nbA << " aretes.";
+            qDebug() << "\tL objet possede " << nbS  << " sommets, " << nbF << " faces et " << nbA << " aretes.";
             tabSommets = new double[nbS*3];
             tabFaces = new int[nbF*4];
         }
@@ -56,7 +56,7 @@ void Maillage::lireMaillage(QString chemin){
             tabFaces[4*(nbLigne - nbS - 3)+3]=p3;
         }
     }
-    qDebug() << "Fichier .off lu et stocké";
+    qDebug() << "\tFichier .off lu et stocké";
 }
 
 void Maillage::ecrireMaillage(QString chemin){
@@ -73,5 +73,31 @@ void Maillage::ecrireMaillage(QString chemin){
             stream << tabFaces[i] << " " << tabFaces[i+1] << " " << tabFaces[i+2] << " " << tabFaces[i+3] << endl;
         }
     }
-    qDebug() << "Fichier .off écrit";
+    qDebug() << "\tFichier .off écrit";
+}
+
+Point* Maillage::calculG(){
+    float x=0,y=0,z=0;
+    for(int i = 0; i<nbS*3; i+=3){
+        x+=tabSommets[i];
+        y+=tabSommets[i+1];
+        z+=tabSommets[i+2];
+        //qDebug()<< x << " " << y << " " << z;
+    }
+    //qDebug()<< x << " " << y << " " << z << " - " << nbS;
+    x /= nbS;
+    y /= nbS;
+    z /= nbS;
+
+    Point* p = new Point(x,y,z);
+    p->afficheP();
+    return p;
+}
+
+void Maillage::convSpherique(){
+    //https://fr.wikipedia.org/wiki/Coordonn%C3%A9es_sph%C3%A9riques#Relation_avec_les_autres_syst.C3.A8mes_de_coordonn.C3.A9es_usuels
+}
+
+void Maillage::convCart(){
+    //https://fr.wikipedia.org/wiki/Coordonn%C3%A9es_sph%C3%A9riques#Relation_avec_les_autres_syst.C3.A8mes_de_coordonn.C3.A9es_usuels
 }

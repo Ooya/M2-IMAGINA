@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QStringList>
 #include <sstream>
+#include <qmath.h>
 #include "face.h"
 #include "point.h"
 
@@ -14,16 +15,19 @@
 class Maillage
 {
 public:
-    Maillage();
-    void lireMaillage(QString chemin);
-    void ecrireMaillage(QString chemin);
-
     int nbS,nbF,nbA;
     double* tabSommets;
     int* tabFaces;
 
     QVector<Point> vPoints;
     QVector<Face> vFaces;
+
+    Maillage();
+    void lireMaillage(QString chemin);
+    void ecrireMaillage(QString chemin);
+    Point *calculG();
+    void convSpherique();
+    void convCart();
 };
 
 #endif // MAILLAGE_H
