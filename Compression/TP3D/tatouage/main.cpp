@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    QString path = "/auto_home/tcastanie/Dropbox/M2-IMAGINA/Compression/TP3D/";
+    QString path = "/home/thibaut/Dropbox/M2-IMAGINA/Compression/TP3D/";
     Maillage m;
     m.lireMaillage(path+"triceratops.off");
     m.ecrireMaillage(path+"triceratopsTatoue.off");

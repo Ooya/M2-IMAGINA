@@ -12,6 +12,9 @@ void Maillage::lireMaillage(QString chemin){
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
+
+    QDebug dbg(QtDebugMsg);
+
     QTextStream in(&file);
     while (!in.atEnd()) {
         nbLigne++;
@@ -34,6 +37,7 @@ void Maillage::lireMaillage(QString chemin){
             pt1 = iss[0].toDouble();
             pt2 = iss[1].toDouble();
             pt3 = iss[2].toDouble();
+            //dbg << 3*(nbLigne-3);
             tabSommets[3*(nbLigne-3)]=pt1;
             tabSommets[3*(nbLigne-3)+1]=pt2;
             tabSommets[3*(nbLigne-3)+2]=pt3;
@@ -45,9 +49,11 @@ void Maillage::lireMaillage(QString chemin){
             p1 = iss[1].toInt();
             p2 = iss[2].toInt();
             p3 = iss[3].toInt();
-            tabFaces[3*(nbLigne-(nbLigne+3))]=p1;
-            tabFaces[3*(nbLigne-(nbLigne+3))+1]=p2;
-            tabFaces[3*(nbLigne-(nbLigne+3))+2]=p3;
+            //dbg << 4*(nbLigne - nbS - 3);
+            tabFaces[4*(nbLigne - nbS - 3)]=nb;
+            tabFaces[4*(nbLigne - nbS - 3)+1]=p1;
+            tabFaces[4*(nbLigne - nbS - 3)+2]=p2;
+            tabFaces[4*(nbLigne - nbS - 3)+3]=p3;
         }
     }
     qDebug() << "Fichier .off lu et stocké";
@@ -64,7 +70,7 @@ void Maillage::ecrireMaillage(QString chemin){
             stream << tabSommets[i] << " " << tabSommets[i+1] << " " << tabSommets[i+2] << endl;
         }
         for(int i = 0; i<nbF*4; i+=4){
-            stream << tabFaces[i] << " " << tabFaces[i+1] << " " << tabFaces[i+2] << endl;
+            stream << tabFaces[i] << " " << tabFaces[i+1] << " " << tabFaces[i+2] << " " << tabFaces[i+3] << endl;
         }
     }
     qDebug() << "Fichier .off écrit";
