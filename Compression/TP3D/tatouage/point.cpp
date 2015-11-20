@@ -12,5 +12,5 @@ Point::Point(float x, float y, float z){
 }
 
 void Point::afficheP(){
-    qDebug()<< "x: " << this->x << " y: " << this->y << " z: " << this->z;
+    qDebug()<< "\t(" << this->x << ";" << this->y << ";" << this->z << ")";
 }

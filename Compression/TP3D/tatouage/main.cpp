@@ -3,6 +3,7 @@
 #include "face.h"
 #include "point.h"
 #include "maillage.h"
+#include "bin.h"
 
 using namespace std;
 
@@ -20,12 +21,14 @@ int main(int argc, char *argv[])
     qDebug() << endl << "...calculG()...";
     m.calculG();
 
+    qDebug() << endl << "...convSpherique()...";
+    m.convSpherique();
+
+    qDebug() << endl << "...convCart()...";
+    m.convCart();
+
     qDebug() << endl << "...ecrireMaillage()...";
     m.ecrireMaillage(path+"triceratopsTatoue.off");
-
-    //qDebug() << endl << "...convSpherique()...";
-
-    //qDebug() << endl << "...convCart()...";
 
     return a.exec();
 }

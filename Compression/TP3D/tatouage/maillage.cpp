@@ -12,7 +12,6 @@ void Maillage::lireMaillage(QString chemin){
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
-
     //QDebug dbg(QtDebugMsg);
 
     QTextStream in(&file);
@@ -95,9 +94,31 @@ Point* Maillage::calculG(){
 }
 
 void Maillage::convSpherique(){
-    //https://fr.wikipedia.org/wiki/Coordonn%C3%A9es_sph%C3%A9riques#Relation_avec_les_autres_syst.C3.A8mes_de_coordonn.C3.A9es_usuels
+    //convertit des données cartésiennes en données sphériques
+    //https://en.wikipedia.org/wiki/Spherical_coordinate_system#Coordinate_system_conversions
+    float rho, theta, phi;
+    for(int i = 0; i<nbS*3; i+=3){
+        rho = qSqrt(qPow(tabSommets[i],2) + qPow(tabSommets[i+1],2) + qPow(tabSommets[i+2],2));
+        theta = qAcos(tabSommets[i+2]/rho);
+        phi = qAtan2(tabSommets[i],tabSommets[i+1]);
+        //qDebug() << rho << theta << phi;
+        tabSommets[i] = rho;
+        tabSommets[i+1] = theta;
+        tabSommets[i+2] = phi;
+    }
 }
 
 void Maillage::convCart(){
-    //https://fr.wikipedia.org/wiki/Coordonn%C3%A9es_sph%C3%A9riques#Relation_avec_les_autres_syst.C3.A8mes_de_coordonn.C3.A9es_usuels
+    //https://en.wikipedia.org/wiki/Spherical_coordinate_system#Coordinate_system_conversions
+    //convertit des données sphériques en données cartésiennes
+    float x,y,z;
+    for(int i = 0; i<nbS*3; i+=3){
+        x = tabSommets[i] * qSin(tabSommets[i+1]) * qCos(tabSommets[i+2]);
+        y = tabSommets[i] * qSin(tabSommets[i+1]) * qSin(tabSommets[i+2]);
+        z = tabSommets[i] * qCos(tabSommets[i+1]);
+        //qDebug() << x << y << z;
+        tabSommets[i+1] = x;
+        tabSommets[i] = y;
+        tabSommets[i+2] = z;
+    }
 }

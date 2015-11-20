@@ -18,9 +18,11 @@ TEMPLATE = app
 SOURCES += main.cpp \
     point.cpp \
     face.cpp \
-    maillage.cpp
+    maillage.cpp \
+    bin.cpp
 
 HEADERS += \
     point.h \
     face.h \
-    maillage.h
+    maillage.h \
+    bin.h

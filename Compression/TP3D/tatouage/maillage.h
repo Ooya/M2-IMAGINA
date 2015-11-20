@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QStringList>
 #include <sstream>
-#include <qmath.h>
+#include <QtMath>
 #include "face.h"
 #include "point.h"
 
