@@ -122,3 +122,28 @@ void Maillage::convCart(){
         tabSommets[i+2] = z;
     }
 }
+
+void Maillage::normalise(float rMin, float rMax){
+    float norme = rMax - rMin;
+    for(int i = 0; i<nbS*3; i+=3){
+        float r = (tabSommets[i]-rMin) / norme;
+        tabSommets[i] = r;
+    }
+}
+
+void Maillage::normaliseInv(float rMin, float rMax){
+    float norme = rMax - rMin;
+    for(int i = 0; i<nbS*3; i+=3){
+        float r = tabSommets[i] * norme + rMin;
+        tabSommets[i] = r;
+    }
+}
+
+void Maillage::tatouage(QVector<bool> message, float alpha, float delta, int nBin){
+    Point *p = calculG();
+    for(int i = 0; i<nbS*3; i+=3){
+        tabSommets[i] = p->x - tabSommets[i];
+        tabSommets[i+1] = p->y - tabSommets[i+1];
+        tabSommets[i+2] = p->z - tabSommets[i+2];
+    }
+}
