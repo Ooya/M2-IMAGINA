@@ -1,0 +1,261 @@
+%%%%JE FINIS DEMAIN MATIN JE SUIS CUIT
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\lstset{language=C++,
+           basicstyle=\ttfamily,
+           keywordstyle=\color{blue}\ttfamily,
+           stringstyle=\color{red}\ttfamily,
+           commentstyle=\color{green}\ttfamily,
+          breaklines=true
+          }
+
+\title{Les effets spéciaux dans les jeux vidéo}
+
+\author{Thibaut Castanié\\Vincent Bazia\\\textit{M2 IMAGINA}}
+
+\date{27 novembre 2015}
+
+\addto\captionsenglish{% Replace "english" with the language you use
+  \renewcommand{\contentsname}
+    {Table des matières}
+}
+
+\begin{document}
+\maketitle
+\vspace{2cm}
+\tableofcontents
+
+\thispagestyle{empty}
+
+\newpage
+\setcounter{page}{1}
+\section*{Introduction}
+\label{sec:intro}
+\addcontentsline{toc}{section}{\nameref{sec:intro}}
+\paragraph{} Les jeu-vidéos ont pour ambition d'être le plus proche possible de la réalité visuelle. Pour cela ils exploitent de mieux en mieux la puissance grandissante des machines, afin de posséder des modèles de plus en plus détaillés, des textures avec un plus grand niveau de détails, mais aussi des effets visuels de plus en plus proches de la réalité. La majorité des effets sont calculés "post-traitement", c'est à dire après que le rendu de la scène globale soit effectué. Ils se doivent donc d'être peu coûteux en puissance de calcul afin de ne pas dégrader l'expérience du joueur.
+
+%%http://www.cse.chalmers.se/edu/year/2011/course/TDA361/Advanced%20Computer%20Graphics/Practical_Post-Process_Depth_Of_Field.pdf
+
+%%http://http.developer.nvidia.com/GPUGems/gpugems_ch23.html
+
+%http://www.brandorf.com/wp-content/uploads/2009/01/dof-research.pdf
+\section{Depth of field}
+
+\subsection{Présentation}
+\paragraph{} La profonfeur de champ est l'effet qui va faire que les objets qui se trouvent à une certaine distance apparaissent nets, tandis que les objets qui sont plus près ou plus loin apparaissent flous. 
+
+La profondeur de champ est couramment utilisée dans la photographie et la cinématographie afin de diriger l'attention du spectateur ainsi que pour faciliter le discernement des profondeur dans une scène.
+\begin{center}
+\includegraphics[scale=0.25]{./img/skyrim.jpg}
+\end{center}
+%\vspace{0.2cm}
+\paragraph{} De base, cet effet résulte de la nature des lentilles. Au niveau de notre oeil, par exemple, seuls les rayons lumineux d'objets à une certaine distance viendront converger en un point. Nous verrons ces objets nets, tandis le reste sera plus ou moins flou. 
+Dans le cas des mondes 3D, la profondeur de champ naturelle n'existe pas. Pour obtenir cet effet, nous devons le simuler afin d'approximer le comportement d'une lentille.
+
+On dénombre cinq techniques principales dans la gestion de la profondeur de champ. Seulement pour chacune, il faut faire un choix entre la qualité et la vitesse d'exécution. 
+
+Nous allons nous intéresser à la méthode Reverse-Mapped Z-Buffer. Cette technique rapide, est la plus susceptible d'être utile dans le développement d'applications temps réel. 
+
+\subsection{Reverse-Mapped Z-Buffer}
+La première étape consiste à déterminer une lentille virtuelle.
+\begin{center}
+\includegraphics[scale=0.5]{./img/lentille1.jpg}
+\end{center}
+Le Cercle de Confusion (c) est la zone où les objets seront nets. Image Plane est la rétine de notre lentille virtuelle et la focale détermine la distance à laquelle les objets seront nets. 
+Grâce à ces différents paramètres, nous pouvons déterminer les objets qui seront nets de la scène.\\
+
+La première étape de cette méthode consiste à afficher les différences de profondeur Z entre les objets et le cercle de confusion de la scène en couleur.
+
+\begin{center}
+\includegraphics[scale=0.3]{./img/zbuf.png}
+\end{center}
+
+Afin de rendre flou les éléments hors du cercle de confusion, la méthode la plus répandue est de générer des mipmaps de la texture de notre scène afin d'obtenir différentes qualités de cette texture.
+
+\begin{center}
+\includegraphics[scale=0.3]{./img/mipmaps.png}
+\end{center}
+
+Enfin, on applique aux objets de notre scène les textures des plus ou moins bonne qualité en fonction de la différence de profondeur Z.
+
+%\vspace{0.2cm}
+\begin{center}
+\includegraphics[scale=0.3]{./img/blur.png}
+\end{center}
+%\vspace{0.2cm}
+
+Cette technique est la plus rapide. C'est le choix priviliégié dans le développement d'applications qui nécessitent un rendu rapide en temps réel.
+
+
+\section{Glows (blooming)}
+\subsection{Présentation}
+
+\paragraph{} L'effet de \textit{blooming} (lueur en français), est un phénomène permettant d'aug\-menter grandement le réalisme d'une image, pour un coût en performance assez faible. Dans le monde réel, cet effet est visible par l'oeil humain quand il regarde des objets très brillants situés dans un environnement sombre. En effet, la transition du lumineux au sombre étant brutale, elle devient floue, la lumière débordant dans la zone obscure. Un objet possédant une brillance trop élevée aura d'autres effets sur la vision, tel l'apparition de stries ou d'effets de lentille, ce qui n'est pas pris en compte dans la génération classique d'un effet de \textit{blooming}. Le flou lumineux est souvent utilisé de façon non-naturelle, dans le jeu-vidéo et les images de synthèse, afin de donner un aspect futuristique à une scène, donner de l'importance à un personnage ou bien accentuer au maximum l'effet aveuglant une lumière.
+
+\subsection{Mise en place}
+
+\paragraph{} Lorsque l'effet doit être appliqué sur des objets simples, la méthode la plus efficace est d'appliquer une texture de type \textit{"glow"} sur l'objet. Ainsi la texture le suivra exactement pendant son animation. Un effet de lueur "fixe" est alors appliqué en post-traitement sur l'ensemble de la texture \textit{"glow"}. Cette technique a l'avantage de pouvoir désactiver l'effet à tout moment, et aussi de le modifier à n'importe quelle étape du développement.
+\vspace{0.2cm}
+\begin{center}
+\includegraphics[scale=0.7]{./img/bloomTex.jpg}
+\end{center}
+
+Ici, l'image \textbf{(a)} possède la \textit{glow-texture} de l'image \textbf{(b)}, sans que l'effet soit activé. L'image \textbf{(c)} possède l'effet de \textit{blooming} activé.
+
+Lorsque la scène possède des sources de lueurs différentes ou que celles-ci possèdent des formes complexes, donc des variations dans la puissance de l'effet, la texture \textit{"glow"} peut être couplée à d'autres textures telles que l'\textit{alpha}. Ceci permet de séparer l'effet du reste de l'image. On peut ainsi appliquer des effets de flou afin d'accentuer le \textit{glowing} de l'effet.
+\vspace{0.2cm}
+\begin{center}
+\includegraphics[scale=0.7]{./img/bloom2.jpg}
+\end{center}
+
+\paragraph{} Les textures peuvent être modifiées très facilement sur une durée afin d'animer les effets de \textit{glow}, pour un coût de calcul faible.
+
+%http://http.developer.nvidia.com/GPUGems/gpugems_ch21.html
+
+
+
+
+
+
+
+
+
+%http://research.ijcaonline.org/volume108/number11/pxc3900275.pdf
+
+%https://www.cg.tuwien.ac.at/research/publications/2013/Prast_Stefanie_2013-CLG/Prast_Stefanie_2013-CLG-Thesis.pdf
+
+% http://www.gamasutra.com/blogs/BartlomiejWronski/20141208/226295/Atmospheric_scattering_and_volumetric_fog_algorithm__part_1.php
+
+%http://www.ventuz.com/support/help/V4_06/HowTo/HowToCreateGodRayShader.html
+
+%http://http.developer.nvidia.com/GPUGems3/gpugems3_ch13.html
+
+%https://medium.com/community-play-3d/god-rays-whats-that-5a67f26aeac2#.hkm16xjmh
+\section{God rays}
+
+\subsection{Présentation}
+\paragraph{}
+God rays, ou Rayon crépusculaire, est une expression pour décrire les rayons de lumière qui proviennent du soleil quand il est, en partie, couvert. Ils apparaissent sous formes de raies lumineuses entrecoupés de zones ombragées.
+En réalité ces rayons sont parallèles, alors que la perspective nous les fait voir orientés.
+Les particules en suspension dans l'air facilitent leur visibilité.
+
+\begin{center}
+\includegraphics[scale=0.35]{./img/god.jpeg}\\
+\textit{God Rays dans le monde réel.}
+\end{center}
+
+Dans le développement graphique 3D, on les appelle aussi \textit{"Volumetric Light Scattering"}.
+Leur implémentation va permettre de rendre nos mondes plus réalistes. De plus, cet effet peut être utilisé dans le but de changer l'ambiance d'une scène.
+
+\subsection{Mise en place}
+\vspace{0.3cm}
+\begin{center}
+\includegraphics[scale=0.3]{./img/gr1.jpeg}\\
+\textit{La scène sans God Rays.}
+\end{center}
+
+La méthode consiste dans un premier temps à définir ce que l'on veut afficher normalement et ce que l'on veut définir comme obstacle aux rayons de lumière. Nous allons afficher ces obstacles en noir.
+
+Pour cela, on sauvegarde dans un premier temps les noeuds de notre scène. Puis on rend tous nos noeuds d'obstacle dans le standard SOLID Material avec une émission de couleur noir.On rend la scène puis on réinitialise les noeuds à la configuration précédente.
+
+\begin{center}
+\includegraphics[scale=0.2]{./img/gr2.jpeg}
+\end{center}
+
+Ensuite, on applique un shader qui va se charger de disperser cette lumière au sein de notre rendu. Grâce à la ré-initialisation de nos noeud, on remet ensuite en place les couleurs de bases.
+
+\begin{center}
+\includegraphics[scale=0.16]{./img/gr3.jpeg}\hspace{0.2cm}
+\includegraphics[scale=0.16]{./img/gr4.jpeg}
+\end{center}
+
+Enfin, pour un rendu plus réaliste, on va adoucir les rayons en faisant un léger dégradé avec les couleurs de base des obstacles.
+
+\begin{center}
+\includegraphics[scale=0.2]{./img/gr5.jpeg}
+\end{center}
+
+On obtient ainsi un bel effet de God Rays qui change totalement l'ambiance de notre pièce.
+
+\iffalse
+\begin{lstlisting}[frame=single]
+uniform sampler2D UserMapSampler;
+uniform vec2 lightPositionOnScreen;
+void main()
+/// Our light scattering pass sampler
+uniform sampler2D UserMapSampler;
+/// Our base render sampler
+uniform sampler2D ColorMapSampler;
+{
+ float decay=0.96815;
+ float exposure=0.2;
+ float density=0.926;
+ float weight=0.58767;
+ /// NUM_SAMPLES will describe the rays quality, you can play with
+ int NUM_SAMPLES = 100;
+ vec2 tc = gl_TexCoord[0].xy;
+ vec2 deltaTextCoor = tc - lightPositionOnScreen.xy;
+ deltaTexCoord *= 1.0 / float(NUM_SAMPLES) * density;
+ float illuminationDecay = 1.0;
+ vec4 color =texture2D(UserMapSampler, tc.xy)*0.4;
+ for(int i=0; i < NUM_SAMPLES ; i++)
+ {
+    tc -= deltaTexCoord;
+    vec4 sample = texture2D(UserMapSampler, tc)*0.4;
+    sample *= illuminationDecay * weight;
+    color += sample;
+    illuminationDecay *= decay;
+ }
+ vec4 realColor = texture2D(ColorMapSampler, gl_TexCoord[0].xy);
+ gl_FragColor = ((vec4((vec3(color.r, color.g, color.b) * exposure), 1)) + (realColor*(1.1)))
+}
+\end{lstlisting}
+\fi
+
+\section{Motion Blur}
+\subsection{Présentation}
+\paragraph{} Cet effet est observable dans le monde réel, lorsqu'on regarde le paysage défiler à travers la vitre d'une voiture : si on n'observe aucun point du paysage en particulier, notre cerveau n'est pas capable d'analyser les images qui défilent rapidement et produit une sorte de brouillard visuel.
+
+Le flou de mouvement est le meilleur moyen de simuler de la vitesse dans un jeu vidéo. Ainsi, dans les jeux de courses, c'est l'effet le plus important car il augmente grandement le réalisme et la sensation de vitesse. Il permet aussi d'adoucir l'apparence d'un jeu dont le rendu est de 30 images par secondes, ou moins. Cette façon d'ajouter du flou exige néanmoins une importante puissance de calcul.
+
+\vspace{0.5cm}
+
+\begin{center}
+\includegraphics[scale=0.4]{./img/27fig02.jpg}\hspace{0.6cm}
+\includegraphics[scale=0.4]{./img/27fig01.jpg}\\
+\textit{Une scène sans, et avec flou cinétique}
+\end{center}
+
+\subsection{Fonctionnement}
+\paragraph{} Il y a deux façons principales pour ajouter du flou cinétique dans un jeu vidéo.
+
+La première est d'utiliser les mouvements de la caméra, afin de définir sa vitesse et sa direction, pour créer un flou cinétique et un flou radial. Cette méthode modifie ainsi le comportement entier de l'écran, mais a le mérite d'être moins chère en puissance de calcul.
+
+La seconde consiste à utiliser un \textit{shader} pour créer un tampon de vitesse, afin de marquer l'intensité du mouvement de l'effet. Cette méthode doit être appliquée sur chaque objet sur lequel on désire appliquer du flou, elle coûte donc plus cher en puissance de calcul que la précédente.
+
+\paragraph{} Ces deux méthodes sont coûteuses et dépendent grandement des limites de la plateforme sur laquelle le jeu s'exécute. En effet, la scène nécessite d'être rendue dans un processus différent afin de pouvoir générer le tampon de vitesse pour chaque pixel. Cela est problématique quand l'application n'autorise pas le passage de la scène dans le canal de rendu plus d'une fois par boucle de rendu.
+
+\section*{Conclusion}
+\label{sec:concl}
+\addcontentsline{toc}{section}{\nameref{sec:concl}}
+\paragraph{} Les effets appliqués dans les jeu-vidéos permettent d'améliorer grandement le rendu d'une scène en utilisant le moins de puissance de calcul possible. La plupart d'entre eux utilisent donc des astuces afin d'obtenir un effet qui puisse "tromper" le joueur en le faisant croire qu'il est naturel. En effet, à l'heure actuelle, un jeu ne peut se permettre de calculer en direct les multiples rebonds de la lumière sur des surfaces, ou bien ses interactions sur l'oeil humain. L'emploi de techniques rapides à calculer est donc nécessaire afin d'assurer une expérience de jeu fluide.
+
+\section*{Bibliographie}
+\label{sec:bib}
+\addcontentsline{toc}{section}{\nameref{sec:bib}}
+
+\begin{itemize}
+\item \textit{n}Vidia, Randima Fernando, \textit{GPU Gems 1}, Addison-Wesley Professional, 2004
+\item \textit{n}Vidia, Hubert Nguyen, \textit{GPU Gems 3}, Addison-Wesley Professional, 2007
+\item Julien Moreau-Mathis, \textit{Gods Rays? What's that?},  \url{medium.com}, 2014
+\item Unreal Engine 4 documention, \url{https://docs.unrealengine.com/}
+\end{itemize}
+ 
+
+
+\end{document}

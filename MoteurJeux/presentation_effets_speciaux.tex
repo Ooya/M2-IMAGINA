@@ -1,0 +1,208 @@
+\documentclass[10pt]{beamer}
+
+%%% effets speciaux
+ %Profondeur&de&champ&(Depth&Of&Field)&
+% God&rays&(light&scaFering)&
+% Glows&(blooming)&
+
+\usetheme[progressbar=frametitle]{m}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{hyperref}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\title{Les effets spéciaux dans les jeux vidéo}
+\subtitle{Moteur de jeu}
+\date{27 novembre 2015}
+\author{Thibaut Castanié, Vincent Bazia}
+\institute{Master IMAGINA - Université Montpellier}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}
+  \frametitle{Table of Contents}
+  \setbeamertemplate{section in toc}[sections numbered]
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{Introduction}
+
+%% http://graphics.berkeley.edu/papers/Kosloff-AAF-2007-08/Kosloff-AAF-2007-08.pdf
+
+% http://www.gamasutra.com/view/feature/3102/four_tricks_for_fast_blurring_in_.php?print=1
+
+%% http://www.visus.uni-stuttgart.de/uploads/tx_vispublications/eg07-kraus.pdf
+\section{Depth of field}
+\begin{frame}
+	\frametitle{Depth of field : Présentation}
+    \begin{center}
+	\includegraphics[scale=0.6]{images/starwars.jpg}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Depth of field : Mise en oeuvre}
+    \begin{center}
+    \includegraphics[scale=0.5]{images/noblur.jpg}\\
+    \pause
+    \includegraphics[scale=0.5]{images/zbuf.png}
+	\end{center}
+    
+\end{frame}
+
+\begin{frame}
+	\frametitle{Depth of field : Mipmaps}
+    \begin{center}
+    \includegraphics[scale=0.6]{images/mipmaps.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Depth of field : Résultat}
+    \begin{center}
+    \includegraphics[scale=0.42]{images/blur.jpg}
+    \hspace{0.2cm}
+    \pause
+    \includegraphics[scale=0.42]{images/noblur.jpg}
+	\end{center}
+\end{frame}
+
+
+\section{Glows (blooming)}
+
+\begin{frame}
+	\frametitle{Glows : Présentation}
+    \centering
+    \includegraphics[scale=0.45]{images/bloom.png}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Glows : Présentation}
+    \centering
+    \includegraphics[scale=0.35]{images/bloom.jpg}
+\end{frame}
+
+% http://www.gamasutra.com/view/feature/130520/realtime_glow.php?page=1
+\begin{frame}
+	\frametitle{Glows : Fonctionnement}
+    \centering
+    \includegraphics[scale=0.7]{images/bloomTex.jpeg}\\
+    \vspace{0.5cm}\pause
+    \includegraphics[scale=0.7]{images/bloomplus.jpg}
+\end{frame}
+
+
+
+
+\section{God rays}
+% http://research.ijcaonline.org/volume108/number11/pxc3900275.pdf
+
+% http://www.gamasutra.com/blogs/BartlomiejWronski/20141208/226295/Atmospheric_scattering_and_volumetric_fog_algorithm__part_1.php
+\begin{frame}
+	\frametitle{God rays : Présentation}
+    \centering
+    \includegraphics[scale=0.45]{images/gr1.jpg}\\
+    Exemple : \url{http://threejs.org/examples/webgl_postprocessing_godrays.html}
+\end{frame}
+
+\begin{frame}
+	\frametitle{God rays : Mise en oeuvre}
+    \centering
+    \includegraphics[scale=0.65]{images/gr1.png}
+\end{frame}
+
+\begin{frame}
+	\frametitle{God rays : Mise en oeuvre}
+    \centering
+    \includegraphics[scale=0.5]{images/gr2.png}
+\end{frame}
+
+\begin{frame}
+	\frametitle{God rays : Mise en oeuvre}
+    \centering
+    \includegraphics[scale=0.5]{images/gr3.png}
+\end{frame}
+
+\begin{frame}
+	\frametitle{God rays : Mise en oeuvre}
+    \centering
+    \includegraphics[scale=0.5]{images/gr4.png}
+\end{frame}
+
+\begin{frame}
+	\frametitle{God rays : Résultat}
+    \centering
+    \includegraphics[scale=0.5]{images/gr5.png}
+\end{frame}
+
+\begin{frame}
+	\frametitle{God rays : Comparatif}
+    \centering
+    \includegraphics[scale=0.3]{images/gr5.png}
+    \vspace{0.5cm}
+    \includegraphics[scale=0.4]{images/gr1.png}
+\end{frame}
+
+\section{Motion blur}
+
+\begin{frame}
+	\frametitle{Motion blur : Présentation}
+    \centering
+    \includegraphics[scale=0.5]{images/motionblur2.jpg}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Motion blur : Son utilisation dans le jeu vidéo}
+    \centering
+    \includegraphics[scale=0.45]{images/motionblur3.jpg}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Motion blur : Son utilisation dans le jeu vidéo}
+    \centering
+    \includegraphics[scale=0.2]{images/motionblur.jpg}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Motion blur : Fonctionnement}
+    Deux méthodes principales\pause
+    \begin{center}
+	\includegraphics[scale=0.28]{./images/blur1.png}\\\pause
+	\includegraphics[scale=0.3]{./images/blur2.png}
+	\end{center}
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}
+	\frametitle{Bibliographie}
+    
+    \begin{thebibliography}{}
+    
+    \bibitem{} 
+    \textit{n}Vidia, Randima Fernando, \textit{GPU Gems 1}, Addison-Wesley Professional, 2004
+
+    \bibitem{} 
+    \textit{n}Vidia, Hubert Nguyen, \textit{GPU Gems 3}, Addison-Wesley Professional, 2007
+    
+    \bibitem{}
+    Julien Moreau-Mathis, \textit{Gods Rays? What's that?},  \url{medium.com}, 2014
+
+    \bibitem{}
+    Unreal Engine 4 documention,
+    \\\url{https://docs.unrealengine.com/}
+    
+    \end{thebibliography}
+
+
+\end{frame}
+
+\plain{Des questions ?}
+
+\end{document}
