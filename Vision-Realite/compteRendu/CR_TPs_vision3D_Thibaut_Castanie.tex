@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper]{article}
 
 \usepackage[french]{babel}
 \usepackage[T1]{fontenc}
@@ -17,13 +17,35 @@
 
 \maketitle
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
-\tableofcontents
-\thispagestyle{empty}
+\vspace{2cm}
+%\tableofcontents
+%\thispagestyle{empty}
 
-\newpage 
+%\newpage 
 
+%\setcounter{page}{1}
 \section{Stéréovision}
+\subsection{Introduction}
+La stéréovision par ordinateur est l'extraction de données 3D à partir de photographies d'une même scène, prises sous différents angles de vision. La position relative, la forme et les dimensions des objets composants la scène peuvent ainsi être récupérés à partir de deux images.
+\subsection{Sélection de paires de points}
+%https://fr.wikipedia.org/wiki/G%C3%A9om%C3%A9trie_%C3%A9pipolaire
+%https://fr.wikipedia.org/wiki/Mesure_st%C3%A9r%C3%A9oscopique
+%https://en.wikipedia.org/wiki/Computer_stereo_vision
+Afin de pouvoir définir la matrice fondamentale, il faut d'abord sélectionner des paires de points de contrôle. Une paire de points de contrôle correspond à un détail identique présent sur chaque image. Ainsi, dans le cas de nos deux images de tortue marine, nous pouvons placer un point de contrôle sur chaque narine, aux extrémités des yeux, aux intersections de motifs de sa carapace... 
 
+%IMAGE TORTUE POINTS DE CONTROLE
+
+Pour avoir une estimation fiable, \textbf{un minimum de 8 points est nécessaire}. Pour la suite du TP, nous avons utilisé 12 points. Plus on utilise de points, plus notre calcul sera précis.
+
+
+
+\subsection{Identification de la matrice fondamentale}
+\subsection{Calcul des droites épipolaires}
+
+%8 min paires de points de contrôle,  -> calcul matrice fondamentale -> droites épipolaires -> épipole
+%plusieurs points qui traquent leur position  à partir de la dérivée de la couleur du pixel ~~
+
+\section{Poursuite de cible par flot optique}
 
 
 \end{document}
