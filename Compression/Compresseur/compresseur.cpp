@@ -24,80 +24,80 @@ typedef std::map<char, HuffCode> HuffCodeMap;
 class INode
 {
 public:
-    const int f;
+	const int f;
 
-    virtual ~INode() {}
+	virtual ~INode() {}
 
 protected:
-    INode(int f) : f(f) {}
+	INode(int f) : f(f) {}
 };
 
 class InternalNode : public INode
 {
 public:
-    INode *const left;
-    INode *const right;
+	INode *const left;
+	INode *const right;
 
-    InternalNode(INode* c0, INode* c1) : INode(c0->f + c1->f), left(c0), right(c1) {}
-    ~InternalNode()
-    {
-        delete left;
-        delete right;
-    }
+	InternalNode(INode* c0, INode* c1) : INode(c0->f + c1->f), left(c0), right(c1) {}
+	~InternalNode()
+	{
+		delete left;
+		delete right;
+	}
 };
 
 class LeafNode : public INode
 {
 public:
-    const char c;
+	const char c;
 
-    LeafNode(int f, char c) : INode(f), c(c) {}
+	LeafNode(int f, char c) : INode(f), c(c) {}
 };
 
 struct NodeCmp
 {
-    bool operator()(const INode* lhs, const INode* rhs) const { return lhs->f > rhs->f; }
+	bool operator()(const INode* lhs, const INode* rhs) const { return lhs->f > rhs->f; }
 };
 
 INode* BuildTree(const int (&frequencies)[UniqueSymbols])
 {
-    std::priority_queue<INode*, std::vector<INode*>, NodeCmp> trees;
+	std::priority_queue<INode*, std::vector<INode*>, NodeCmp> trees;
 
-    for (int i = 0; i < UniqueSymbols; ++i)
-    {
-        if(frequencies[i] != 0)
-            trees.push(new LeafNode(frequencies[i], (char)i));
-    }
-    while (trees.size() > 1)
-    {
-        INode* childR = trees.top();
-        trees.pop();
+	for (int i = 0; i < UniqueSymbols; ++i)
+	{
+		if(frequencies[i] != 0)
+			trees.push(new LeafNode(frequencies[i], (char)i));
+	}
+	while (trees.size() > 1)
+	{
+		INode* childR = trees.top();
+		trees.pop();
 
-        INode* childL = trees.top();
-        trees.pop();
+		INode* childL = trees.top();
+		trees.pop();
 
-        INode* parent = new InternalNode(childR, childL);
-        trees.push(parent);
-    }
-    return trees.top();
+		INode* parent = new InternalNode(childR, childL);
+		trees.push(parent);
+	}
+	return trees.top();
 }
 
 void GenerateCodes(const INode* node, const HuffCode& prefix, HuffCodeMap& outCodes)
 {
-    if (const LeafNode* lf = dynamic_cast<const LeafNode*>(node))
-    {
-        outCodes[lf->c] = prefix;
-    }
-    else if (const InternalNode* in = dynamic_cast<const InternalNode*>(node))
-    {
-        HuffCode leftPrefix = prefix;
-        leftPrefix.push_back(false);
-        GenerateCodes(in->left, leftPrefix, outCodes);
+	if (const LeafNode* lf = dynamic_cast<const LeafNode*>(node))
+	{
+		outCodes[lf->c] = prefix;
+	}
+	else if (const InternalNode* in = dynamic_cast<const InternalNode*>(node))
+	{
+		HuffCode leftPrefix = prefix;
+		leftPrefix.push_back(false);
+		GenerateCodes(in->left, leftPrefix, outCodes);
 
-        HuffCode rightPrefix = prefix;
-        rightPrefix.push_back(true);
-        GenerateCodes(in->right, rightPrefix, outCodes);
-    }
+		HuffCode rightPrefix = prefix;
+		rightPrefix.push_back(true);
+		GenerateCodes(in->right, rightPrefix, outCodes);
+	}
 }
 
 void drawCarre(OCTET *ImgOut, int xHG, int yHG, int taille, int couleur){
@@ -108,7 +108,7 @@ void drawCarre(OCTET *ImgOut, int xHG, int yHG, int taille, int couleur){
 	}
 }
 
-void divRecursive(OCTET *ImgIn, OCTET *ImgOut,int x,int y, int nTaille, int nH, int nW, int seuil){
+void divRecursive(OCTET *ImgIn, OCTET *ImgOut,int x,int y, int nTaille, int nH, int nW, int seuil, vector<string> &vRLE){
 	int somme1=0;
 	int somme2=0;
 	int somme3=0;
@@ -170,16 +170,40 @@ void divRecursive(OCTET *ImgIn, OCTET *ImgOut,int x,int y, int nTaille, int nH, 
 
 
 	if(sqrt(variance1) > seuil){
-		divRecursive(ImgIn, ImgOut,x,y,nTaille/4,nH/2,nW/2,seuil);
+		divRecursive(ImgIn, ImgOut,x,y,nTaille/4,nH/2,nW/2,seuil,vRLE);
+	} else {
+		string str;
+		stringstream sstm;
+		sstm << x << "," << y << "," << nH/2 << "," << moyenne1 << "\n";
+		str = sstm.str();
+		vRLE.push_back(str);
 	}
 	if(sqrt(variance2) > seuil){
-		divRecursive(ImgIn, ImgOut,x,y+(nW/2),nTaille/4,nH/2,nW/2,seuil);
+		divRecursive(ImgIn, ImgOut,x,y+(nW/2),nTaille/4,nH/2,nW/2,seuil,vRLE);
+	} else {
+		string str;
+		stringstream sstm;
+		sstm << x << "," << y+(nH/2) << "," << nH/2 << "," << moyenne2 << "\n";
+		str = sstm.str();
+		vRLE.push_back(str);
 	}
 	if(sqrt(variance3) > seuil){
-		divRecursive(ImgIn, ImgOut,x+(nH/2),y,nTaille/4,nH/2,nW/2,seuil);
+		divRecursive(ImgIn, ImgOut,x+(nH/2),y,nTaille/4,nH/2,nW/2,seuil,vRLE);
+	} else {
+		string str;
+		stringstream sstm;
+		sstm << x+(nH/2) << "," << y << "," << nH/2 << "," << moyenne3 << "\n";
+		str = sstm.str();
+		vRLE.push_back(str);
 	}
 	if(sqrt(variance4) > seuil){
-		divRecursive(ImgIn, ImgOut,x+(nH/2),y+(nW/2),nTaille/4,nH/2,nW/2,seuil);
+		divRecursive(ImgIn, ImgOut,x+(nH/2),y+(nW/2),nTaille/4,nH/2,nW/2,seuil,vRLE);
+	} else {
+		string str;
+		stringstream sstm;
+		sstm << x+(nH/2) << "," << y+(nW/2) << "," << nH/2 << "," << moyenne4 << "\n";
+		str = sstm.str();
+		vRLE.push_back(str);
 	}
 }
 
@@ -220,6 +244,12 @@ void jeanExport(vector<char> jeanVector, ostream& stream){
 	}
 }
 
+void stringExport(vector<string> jeanVector, ostream& stream){
+	for(auto i : jeanVector){
+		stream << i;
+	}
+}
+
 int main(int argc, char* argv[]){
 
 	char cNomImgLue[250], cNomImgEcrite1[250], cNomImgEcrite2[250];
@@ -233,6 +263,7 @@ int main(int argc, char* argv[]){
 		exit (1) ;
 	}
 
+	vector<string> vRLE;
 	
 	sscanf (argv[1],"%d",&seuil);
 	sscanf (argv[2],"%s",cNomImgLue);
@@ -258,7 +289,7 @@ int main(int argc, char* argv[]){
 	allocation_tableau(ImgOut, OCTET, nTaille);
 
 	cout << "QuadTree...." << endl;
-	divRecursive(ImgIn, ImgInt1,0,0, nTaille, nH, nW, seuil);
+	divRecursive(ImgIn, ImgInt1,0,0, nTaille, nH, nW, seuil,vRLE);
 	ecrire_image_pgm(cNomImgEcrite1, ImgInt1,  nH, nW);
 	calcPSNR(ImgIn, ImgInt1, nH, nW);
 
@@ -269,37 +300,41 @@ int main(int argc, char* argv[]){
 
 	cout << "Compression Huffman..." << endl;
     // Build frequency table
-    int frequencies[UniqueSymbols] = {0};
-        for (int i = 0; i < nW; i++){
-        for (int j = 0; j < nH; j++){
-            frequencies[ImgIn[i*nW+j]]++;
-        }
-    }
-    INode* root = BuildTree(frequencies);
-    HuffCodeMap codes;
-    GenerateCodes(root, HuffCode(), codes);
-    delete root;
-    stringstream ss;
-    int cpt = 0;
-    for (int i = 0; i < nW; i++){
-        for (int j = 0; j < nH; j++){
-            for (HuffCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it){
-                if(it->first == ImgOut[i*nW+j]){
-                    for(int k =0; k< it->second.size();k++){
-                        ss << it->second[k];
-                    }
-                }
-            }
-        }
-    }
-    string all = ss.str();
-    vector<char> jeanVector;
-    for (int i = 0; i < all.size(); i+=8){
-        char c = strtol(all.substr(i,8).c_str(),0,2);
-        jeanVector.push_back(c);
-    }
-    ofstream jeanFile("med5p.ouf");
-    jeanExport(jeanVector, jeanFile);
+	int frequencies[UniqueSymbols] = {0};
+	for (int i = 0; i < nW; i++){
+		for (int j = 0; j < nH; j++){
+			frequencies[ImgIn[i*nW+j]]++;
+		}
+	}
+	INode* root = BuildTree(frequencies);
+	HuffCodeMap codes;
+	GenerateCodes(root, HuffCode(), codes);
+	delete root;
+	stringstream ss;
+	int cpt = 0;
+	for (int i = 0; i < nW; i++){
+		for (int j = 0; j < nH; j++){
+			for (HuffCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it){
+				if(it->first == ImgOut[i*nW+j]){
+					for(int k =0; k< it->second.size();k++){
+						ss << it->second[k];
+					}
+				}
+			}
+		}
+	}
+	string all = ss.str();
+	vector<char> jeanVector;
+	for (int i = 0; i < all.size(); i+=8){
+		char c = strtol(all.substr(i,8).c_str(),0,2);
+		jeanVector.push_back(c);
+	}
+	ofstream jeanFile("med5p.ouf");
+	jeanExport(jeanVector, jeanFile);
+
+	ofstream rleFile("RLEfile.txt");
+	stringExport(vRLE, rleFile);
+
 
 	free(ImgIn);
 	return 1;
