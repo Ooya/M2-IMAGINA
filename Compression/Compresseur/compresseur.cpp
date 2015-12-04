@@ -13,6 +13,7 @@
 #include <fstream>
 #include <vector>
 #include "image_ppm.h"
+#include "huffman.h"
 
 using namespace std;
 
@@ -311,7 +312,6 @@ int main(int argc, char* argv[]){
 	GenerateCodes(root, HuffCode(), codes);
 	delete root;
 	stringstream ss;
-	int cpt = 0;
 	for (int i = 0; i < nW; i++){
 		for (int j = 0; j < nH; j++){
 			for (HuffCodeMap::const_iterator it = codes.begin(); it != codes.end(); ++it){
